@@ -1,0 +1,15 @@
+# Ignore Python venv anywhere
+venv/
+*/venv/
+
+# Ignore PyCache
+__pycache__/
+*.pyc
+
+# Ignore large binaries
+*.pyd
+*.dll
+
+# Node and build files
+node_modules/
+dist/
