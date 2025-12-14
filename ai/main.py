@@ -3,8 +3,9 @@ from flask_cors import CORS
 import base64
 import cv2
 import numpy as np
+from flask.typing import ResponseReturnValue
 
-# Import modules (we'll implement them later)
+# Import modules
 from utils.image_preprocessing import preprocess_image
 from utils.segmentation import run_segmentation
 from utils.heatmap_generator import generate_heatmap
@@ -13,39 +14,55 @@ from services.panel_recommendation import recommend_panels
 app = Flask(__name__)
 CORS(app)
 
+def resize_mask(mask, target_shape):
+    """Resize a 640x640 mask back to original image shape."""
+    return cv2.resize(mask, (target_shape[1], target_shape[0]), interpolation=cv2.INTER_NEAREST)
+
 
 @app.route("/process-image", methods=["POST"])
-def process_image():
+def process_image() -> ResponseReturnValue:
     try:
-        # Validate request
         if "image" not in request.files:
             return jsonify({"error": "No image provided"}), 400
 
         file = request.files["image"]
 
-        # Read image bytes
         img_bytes = np.frombuffer(file.read(), np.uint8)
         image = cv2.imdecode(img_bytes, cv2.IMREAD_COLOR)
 
-        # Step 1 → Preprocess Image
+        # -----------------------------------------------
+        # ✅ FIX ADDED: Catch unreadable / invalid images
+        # -----------------------------------------------
+        if image is None:
+            return jsonify({"error": "Invalid or unreadable image file"}), 400
+        # -----------------------------------------------
+
+        original_h, original_w = image.shape[:2]
+
+        # Step 1: Preprocess for SAM & YOLO
         preprocessed = preprocess_image(image)
 
-        # Step 2 → Segmentation (SAM + YOLO)
+        # Step 2: Segmentation (output is 640x640)
         segmentation_output = run_segmentation(preprocessed)
 
-        rooftop_mask = segmentation_output["rooftop_mask"]
-        obstruction_mask = segmentation_output["obstruction_mask"]
+        rooftop_mask_640 = segmentation_output["rooftop_mask"]
+        obstruction_mask_640 = segmentation_output["obstruction_mask"]
 
-        # Step 3 → Generate Heatmap
+        # Step 3: Resize masks back to original image size
+        rooftop_mask = resize_mask(rooftop_mask_640, (original_h, original_w))
+        obstruction_mask = resize_mask(obstruction_mask_640, (original_h, original_w))
+
+        # Step 4: Generate heatmap using ORIGINAL image size
         heatmap = generate_heatmap(image, rooftop_mask, obstruction_mask)
 
-        # Step 4 → Panel Placement
+        # Step 5: Panel recommendations
         recommendations = recommend_panels(rooftop_mask, obstruction_mask, heatmap)
 
-        # Convert masks to base64 for backend
+        # Base64 encoder
         def encode(mask):
-            _, buffer = cv2.imencode(".png", mask)
-            return base64.b64encode(buffer).decode("utf-8")
+            success, buffer = cv2.imencode(".png", mask)
+            buffer_bytes = buffer.tobytes()
+            return base64.b64encode(buffer_bytes).decode("utf-8")
 
         return jsonify({
             "rooftop_mask": encode(rooftop_mask),
