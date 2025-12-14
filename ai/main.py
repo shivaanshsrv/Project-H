@@ -54,7 +54,6 @@ def process_image() -> ResponseReturnValue:
         return jsonify({
             "rooftop_mask": encode(rooftop_mask),
             "obstruction_mask": encode(obstruction_mask),
-            
             "heatmap": encode(heatmap),
             "recommendations": recommendations
         })
