@@ -1,18 +1,17 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 
-export const saveBase64Image = (base64Data, folderName, prefix) => {
+export const saveBase64Image = async (base64Data, folderName, prefix) => {
     const folder = `uploads/${folderName}`;
-    if (!fs.existsSync(folder)) {
-        fs.mkdirSync(folder, { recursive: true });
-    }
+
+    await fs.mkdir(folder, { recursive: true });
 
     const fileName = `${prefix}-${Date.now()}.png`;
     const filePath = path.join(folder, fileName);
 
-    const imageBuffer = Buffer.from(base64Data, "base64");
+    const buffer = Buffer.from(base64Data, "base64");
 
-    fs.writeFileSync(filePath, imageBuffer);
+    await fs.writeFile(filePath, buffer);
 
     return filePath;
 };

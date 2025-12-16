@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { analyzeImageController, getAllAnalysis, getOneAnalysis } from "../controllers/index.js";
+import { analyzeImageController, getAllAnalysis, getOneAnalysis, deleteAnalysis } from "../controllers/index.js";
 import { uploadSingle } from "../utils/fileUpload.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 
@@ -12,5 +12,7 @@ router.post("/analyze", authMiddleware, uploadSingle("image"), analyzeImageContr
 router.get("/all", authMiddleware, getAllAnalysis);
 
 router.get("/:id", authMiddleware, getOneAnalysis);
+router.delete("/:id", authMiddleware, deleteAnalysis);
+
 
 export { router as aiRouter };

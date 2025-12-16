@@ -1,16 +1,15 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            dbName: "ProjectH",
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+  try {
+    await mongoose.connect("mongodb://127.0.0.1:27017/ProjectH", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-        console.log("✅ MongoDB Connected Successfully");
-    } catch (error) {
-        console.error("❌ MongoDB Connection Error:", error.message);
-        process.exit(1);
-    }
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  }
 };
