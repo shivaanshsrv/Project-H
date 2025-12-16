@@ -21,3 +21,6 @@ dist/
 *.onnx
 models/
 ai/models/
+
+.env/
+web/backend/.env
