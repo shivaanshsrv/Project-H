@@ -1,20 +1,38 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login.jsx";
+import Analyze from "./pages/Analyze.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
-function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/status")
-      .then(res => setMessage(res.data))
-      .catch(err => setMessage("Error connecting to server"));
-  }, []);
-
+export default function App() {
   return (
-    <div style={{ padding: "30px", fontSize: "24px" }}>
-      {message}
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        {/* Redirect root "/" → "/login" */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/analyze"
+          element={
+            <ProtectedRoute>
+              <Analyze />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
