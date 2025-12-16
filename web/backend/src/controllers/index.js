@@ -1,6 +1,13 @@
-export * from "./user.controller.js";
-export * from "./ai.controller.js"; 
+// AUTH
 export { registerUser, loginUser } from "./auth.controller.js";
 
+// AI ANALYSIS
+export {
+  analyzeImageController,
+  getAllAnalysis,
+  getOneAnalysis,
+  deleteAnalysis
+} from "./ai.controller.js";
 
-// export * from "./admin.controller.js"; // only if exists
+// USERS
+export { getUsers } from "./user.controller.js";

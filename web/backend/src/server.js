@@ -6,12 +6,11 @@ import { connectDB } from "./config/db.js";
 import { appConfig } from "./config/appConfig.js";
 
 const startServer = async () => {
-    await connectDB();  // MUST happen BEFORE app.listen()
+  await connectDB(); // Connect to DB only once
 
-    app.listen(appConfig.PORT, () => {
-        console.log(`🚀 Server running on port ${appConfig.PORT}`);
-    });
+  app.listen(appConfig.PORT, () => {
+    console.log(`🚀 Server running on port ${appConfig.PORT}`);
+  });
 };
 
-connectDB();
-startServer();
+startServer(); // START SERVER ONLY ONCE
