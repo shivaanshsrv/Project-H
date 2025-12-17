@@ -1,4 +1,7 @@
 # Ignore Python venv anywhere
+.venv/
+*/.venv/
+
 venv/
 */venv/
 

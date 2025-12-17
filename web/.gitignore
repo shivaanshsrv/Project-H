@@ -25,5 +25,3 @@ dist-ssr
 
 venv/
 ai/venv/
-.env/
-web/backend/.env
