@@ -1,16 +1,20 @@
-numpy<2
-opencv-python-headless
 fastapi
-uvicorn
-python-multipart
-ultralytics
-segment-anything
-scikit-image
-torch
+uvicorn[standard]
+
+# Core ML & Image
+numpy
 opencv-python
+pillow
 
-torch==2.1.2+cpu
-torchvision==0.16.2+cpu
-torchaudio==2.1.2+cpu
---extra-index-url https://download.pytorch.org/whl/cpu
+# AI / ML models
+ultralytics
+torch
+torchvision
 
+# Utilities
+python-multipart
+
+
+
+# if torch install fails run this manually
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
