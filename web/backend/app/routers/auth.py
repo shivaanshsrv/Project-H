@@ -1,45 +1,48 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.auth import RegisterSchema, LoginSchema
-from app.models.user import users_collection
+from datetime import datetime
+import uuid
+
+from app.database import users_collection
 from app.utils.password import hash_password, verify_password
-from app.utils.jwt import create_token
+from app.utils.jwt import create_access_token
+from app.schemas.auth import RegisterSchema, LoginSchema
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
 
 @router.post("/register")
 async def register(data: RegisterSchema):
     existing = await users_collection.find_one({"email": data.email})
     if existing:
-        raise HTTPException(400, "User already exists")
+        raise HTTPException(status_code=400, detail="Email already exists")
 
     user = {
+        "_id": uuid.uuid4().hex,
         "name": data.name,
         "email": data.email,
-        "password": hash_password(data.password)
+        "password_hash": hash_password(data.password),
+        "created_at": datetime.utcnow().isoformat(),
     }
 
-    result = await users_collection.insert_one(user)
-
-    return {
-        "status": 201,
-        "message": "User registered",
-        "id": str(result.inserted_id)
-    }
+    await users_collection.insert_one(user)
+    return {"message": "User registered successfully"}
 
 
 @router.post("/login")
 async def login(data: LoginSchema):
     user = await users_collection.find_one({"email": data.email})
-    if not user:
-        raise HTTPException(400, "User not found")
+    if not user or not verify_password(data.password, user["password_hash"]):
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    if not verify_password(data.password, user["password"]):
-        raise HTTPException(400, "Incorrect password")
-
-    token = create_token({"id": str(user["_id"])})
+    token = create_access_token({"user_id": user["_id"]})
 
     return {
-        "status": 200,
-        "message": "Login successful",
-        "token": token
+        "access_token": token,
+        "token_type": "bearer",
     }
+
+@router.get("/debug/db")
+async def debug_db():
+    doc = {"test": "working"}
+    await users_collection.insert_one(doc)
+    return {"status": "inserted"}

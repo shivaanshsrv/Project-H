@@ -1,5 +1,11 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from app.config import settings
+import os
 
-client = AsyncIOMotorClient(settings.MONGO_URI)
-db = client["ProjectH"]
+MONGO_URI = os.getenv("MONGO_URI")
+print("🔥 MONGO_URI =", MONGO_URI)
+
+client = AsyncIOMotorClient(MONGO_URI)
+
+db = client["ProjectH"]   
+analysis_collection = db["analysis"]
+users_collection = db["users"]

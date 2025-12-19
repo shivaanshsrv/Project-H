@@ -1,6 +1,6 @@
 import torch
 from pathlib import Path
-from ultralytics import YOLO
+from ultralytics import YOLO # type: ignore
 from segment_anything import sam_model_registry, SamPredictor
 
 MODEL_DIR = Path("models")

@@ -1,15 +1,13 @@
-from fastapi import APIRouter
-from app.models.user import users_collection
+from fastapi import APIRouter, Depends
+from app.utils.jwt import get_current_user
 
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(tags=["Users"])
 
-@router.get("/")
-async def get_users():
-    users = []
-    async for u in users_collection.find():
-        users.append({
-            "id": str(u["_id"]),
-            "name": u["name"],
-            "email": u["email"]
-        })
-    return users
+@router.get("/profile")
+async def get_profile(user=Depends(get_current_user)):
+    return {
+        "id": str(user["_id"]),
+        "name": user["name"],
+        "email": user["email"],
+        "created_at": user.get("created_at")
+    }
