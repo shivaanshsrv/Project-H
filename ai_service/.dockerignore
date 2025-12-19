@@ -1,0 +1,37 @@
+# --- PYTHON ---
+__pycache__/
+*.pyc
+*.pyo
+
+# --- ENVIRONMENTS ---
+venv/
+.venv/
+
+# --- NODE / FRONTEND ---
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+
+# --- OS FILES ---
+.DS_Store
+Thumbs.db
+
+# --- DOCKER / GIT ---
+.git/
+.gitignore
+Dockerfile
+docker-compose.yml
+
+# --- OUTPUT DIRECTORIES ---
+outputs/
+logs/
+*.log
+
+# --- DO NOT IGNORE MODEL WEIGHTS ---
+# models/        <-- REMOVE THIS
+# models/*.pt    <-- REMOVE THIS
+
+# --- BLOCK EVERYTHING ABOVE THIS FOLDER ---
+../
+../*

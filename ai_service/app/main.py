@@ -1,79 +1,84 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from app.model import ai_model
-from app.utils import (
-    save_uploaded_image,
-    save_mask,
-    create_heatmap,
-    auto_segment_rooftop,
-    detect_obstructions
-)
+from fastapi import FastAPI, UploadFile, File
 import cv2
 import numpy as np
+import uuid
 
-app = FastAPI(title="Project-H AI Microservice")
+from app.model import ai_model
+from app.utils import draw_panels, compute_obstruction_mask
 
-@app.post("/analyze")
-async def analyze(image: UploadFile = File(...)):
-    try:
-        img_bytes = await image.read()
-        img_path = save_uploaded_image(img_bytes)
+app = FastAPI()
 
-        img = cv2.imread(img_path)
-        if img is None:
-            raise HTTPException(status_code=400, detail="Invalid image")
 
-        # ------------------------------
-        # 1️⃣ SAM Auto Rooftop Segmentation
-        # ------------------------------
-        rooftop_mask = auto_segment_rooftop(ai_model.sam, img)
+@app.post("/analyze-roof")
+async def analyze_roof(image: UploadFile = File(...)):
+    # ---------- READ IMAGE ----------
+    contents = await image.read()
+    np_img = np.frombuffer(contents, np.uint8)
+    img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
 
-        if rooftop_mask is None:
-            return {
-                "status": 200,
-                "message": "No rooftop found",
-                "rooftop_mask_path": None,
-                "obstruction_mask_path": None,
-                "heatmap_path": None,
-                "panel_count": 0,
-                "estimated_energy_watts": 0,
-                "panels": []
-            }
+    if img is None:
+        return {"error": "Invalid image"}
 
-        rooftop_path = save_mask(rooftop_mask, "rooftop")
+    h, w = img.shape[:2]
 
-        # ------------------------------
-        # 2️⃣ Detect Obstructions (basic logic)
-        # ------------------------------
-        obstruction_mask = detect_obstructions(rooftop_mask)
-        obstruction_path = save_mask(obstruction_mask, "obstruction")
+    # ---------- SAM SEGMENTATION ----------
+    ai_model.sam_predictor.set_image(img)
 
-        # ------------------------------
-        # 3️⃣ Heatmap from obstruction density
-        # ------------------------------
-        heatmap_path = create_heatmap(obstruction_mask)
+    input_point = np.array([[w // 2, h // 2]])
+    input_label = np.array([1])
 
-        # ------------------------------
-        # 4️⃣ Estimate panel count
-        # ------------------------------
-        rooftop_area = int(np.sum(rooftop_mask > 0))
-        avg_panel_area = 15000  # you can adjust later
+    masks, _, _ = ai_model.sam_predictor.predict(
+        point_coords=input_point,
+        point_labels=input_label,
+        multimask_output=False,
+    )
 
-        panel_count = max(rooftop_area // avg_panel_area, 0)
-        estimated_energy = panel_count * 350  # 350 W per panel
+    roof_mask = masks[0]
 
-        # ------------------------------
-        # 5️⃣ Return results
-        # ------------------------------
-        return {
-            "status": 200,
-            "message": "Analysis successful",
-            "rooftop_mask_path": rooftop_path,
-            "obstruction_mask_path": obstruction_path,
-            "heatmap_path": heatmap_path,
-            "panel_count": panel_count,
-            "estimated_energy_watts": estimated_energy,
-            "panels": []
-        }
+    # ---------- OBSTRUCTION MASK ----------
+    obstruction_mask = compute_obstruction_mask(img)
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # ---------- PANEL SIZE (meters → pixels) ----------
+    PANEL_W_M = 1.7   # panel width in meters
+    PANEL_H_M = 1.0   # panel height in meters
+    SCALE = 0.05      # meters per pixel (satellite approx)
+
+    pw = int(PANEL_W_M / SCALE)
+    ph = int(PANEL_H_M / SCALE)
+
+    # ---------- PANEL PLACEMENT ----------
+    panels = []
+    for y in range(0, h - ph, ph):
+        for x in range(0, w - pw, pw):
+            roof_region = roof_mask[y:y + ph, x:x + pw]
+            obs_region = obstruction_mask[y:y + ph, x:x + pw]
+
+            if roof_region.mean() > 0.85 and obs_region.mean() < 0.1:
+                panels.append({
+                    "x": x,
+                    "y": y,
+                    "w": pw,
+                    "h": ph
+                })
+
+    # ---------- ENERGY ESTIMATION (India) ----------
+    PANEL_WATT = 400      # W per panel
+    SUN_HOURS = 4.5      # India average
+
+    panel_count = len(panels)
+    system_kw = (panel_count * PANEL_WATT) / 1000
+    monthly_kwh = system_kw * SUN_HOURS * 30
+    yearly_kwh = monthly_kwh * 12
+
+    # ---------- DRAW OVERLAY IMAGE ----------
+    out_name = f"outputs/panels_{uuid.uuid4().hex}.png"
+    overlay_path = draw_panels(img, panels, out_name)
+
+    return {
+        "panel_count": panel_count,
+        "system_size_kw": round(system_kw, 2),
+        "energy_kwh_per_month": round(monthly_kwh, 1),
+        "energy_kwh_per_year": round(yearly_kwh, 1),
+        "overlay_image": overlay_path,
+        "panels": panels
+    }

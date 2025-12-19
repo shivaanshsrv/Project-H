@@ -1,15 +1,13 @@
 import torch
-import os
-from ultralytics import YOLO
-from segment_anything import sam_model_registry
 from pathlib import Path
+from ultralytics import YOLO
+from segment_anything import sam_model_registry, SamPredictor
 
 MODEL_DIR = Path("models")
 MODEL_DIR.mkdir(exist_ok=True)
 
 YOLO_PATH = MODEL_DIR / "yolov8n.pt"
-SAM_PATH = MODEL_DIR / "mobilesam.pth"
-
+SAM_PATH = MODEL_DIR / "sam_vit_b.pth"   # NOTE: NOT mobile_sam.pt
 
 class AIModel:
     def __init__(self):
@@ -18,31 +16,29 @@ class AIModel:
         print("==============================")
 
         # ---------------------------
-        # YOLOv8n LOADER
+        # YOLOv8
         # ---------------------------
         print("[MODEL] Loading YOLOv8n...")
-        if not YOLO_PATH.exists():
-            print("[DOWNLOAD] YOLOv8n not found. Downloading...")
-        self.yolo = YOLO("yolov8n.pt")  # Ultralytics auto-downloads if missing
+        self.yolo = YOLO(str(YOLO_PATH))
         print("[MODEL] YOLOv8n loaded ✓")
 
         # ---------------------------
-        # MobileSAM LOADER
+        # SAM (ViT-B — OFFICIAL)
         # ---------------------------
-        print("[MODEL] Loading MobileSAM...")
+        print("[MODEL] Loading SAM ViT-B...")
 
         if not SAM_PATH.exists():
-            print("[DOWNLOAD] MobileSAM weights not found. Downloading...")
-            torch.hub.download_url_to_file(
-                "https://github.com/ChaoningZhang/MobileSAM/releases/download/weights/mobile_sam.pt",
-                SAM_PATH
+            raise FileNotFoundError(
+                f"SAM weights not found at {SAM_PATH}\n"
+                f"Download sam_vit_b.pth and place it in models/"
             )
 
-        self.sam = sam_model_registry["vit_t"](checkpoint=str(SAM_PATH))
-        self.sam.to("cpu")  # keep CPU mode for maximum compatibility
+        sam = sam_model_registry["vit_b"](checkpoint=str(SAM_PATH))
+        sam.to("cpu")
 
-        print("[MODEL] MobileSAM loaded ✓")
+        self.sam_predictor = SamPredictor(sam)
 
+        print("[MODEL] SAM ViT-B loaded ✓")
         print("==============================")
         print("[MODEL] All models ready.")
         print("==============================\n")
