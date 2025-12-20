@@ -1,0 +1,21 @@
+fastapi
+uvicorn[standard]
+
+# Database
+motor
+pymongo
+python-dotenv
+
+# Auth & Security
+python-jose
+passlib[bcrypt]
+
+# File handling
+python-multipart
+
+# HTTP client (backend → AI service)
+httpx
+
+# Utils
+pydantic
+email-validator

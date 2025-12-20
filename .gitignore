@@ -1,4 +1,7 @@
 # Ignore Python venv anywhere
+.venv/
+*/.venv/
+
 venv/
 */venv/
 
@@ -21,3 +24,6 @@ dist/
 *.onnx
 models/
 ai/models/
+
+.env/
+web/backend/.env

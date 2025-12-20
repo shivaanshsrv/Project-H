@@ -1,0 +1,20 @@
+fastapi
+uvicorn[standard]
+
+# Core ML & Image
+numpy
+opencv-python
+pillow
+
+# AI / ML models
+ultralytics
+torch
+torchvision
+
+# Utilities
+python-multipart
+
+
+
+# if torch install fails run this manually
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
