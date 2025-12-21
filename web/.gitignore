@@ -25,3 +25,21 @@ dist-ssr
 
 venv/
 ai/venv/
+
+
+# Frontend (Next.js)
+.next/
+node_modules/
+out/
+
+# Environment
+.env
+.env.local
+
+# Python
+venv/
+__pycache__/
+
+# AI outputs
+ai_service/outputs/
+web/backend/uploads/
