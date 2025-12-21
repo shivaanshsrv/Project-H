@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 18, "column": 0}, "map": {"version":3,"sources":["file:///D:/Amity%20K/NTCC%206th%20Sem/Project-H/web/frontend/project-h-frontend/app/page.tsx"],"sourcesContent":["import { redirect } from \"next/navigation\";\n\nexport default function Page() {\n  redirect(\"/analyse\");\n  return null;\n}\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,SAAS;IACtB,IAAA,gPAAQ,EAAC;IACT,OAAO;AACT"}}]
+}
