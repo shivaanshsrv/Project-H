@@ -43,3 +43,10 @@ __pycache__/
 # AI outputs
 ai_service/outputs/
 web/backend/uploads/
+
+
+node_modules/
+.next/
+.env*
+*.log
+dist/

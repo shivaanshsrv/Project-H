@@ -27,3 +27,9 @@ ai/models/
 
 .env/
 web/backend/.env
+
+node_modules/
+.next/
+.env*
+*.log
+dist/
