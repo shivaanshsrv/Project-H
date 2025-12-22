@@ -19,7 +19,7 @@ export default function LoginPage() {
       );
 
       localStorage.setItem("token", res.data.access_token);
-      router.push("/analyse");
+      router.push("/dashboard");
     } catch (err) {
       setError("Invalid email or password");
     }

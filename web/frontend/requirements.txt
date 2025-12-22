@@ -1,0 +1,27 @@
+# Project-H Frontend Requirements (Version 1)
+
+# Runtime
+Node.js >= 18
+npm >= 9
+
+# Framework
+Next.js 14 (App Router)
+React 18
+TypeScript
+
+# Libraries
+axios
+
+# Environment Variables (.env.local)
+NEXT_PUBLIC_BACKEND_URL
+NEXT_PUBLIC_AI_URL
+
+# Installation
+npm install
+
+# Run (Development)
+npm run dev
+
+# Build (Production)
+npm run build
+npm start
