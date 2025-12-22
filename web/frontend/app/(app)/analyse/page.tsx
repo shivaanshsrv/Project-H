@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type AnalysisResult = {
     panel_count: number;
@@ -15,10 +16,23 @@ type AnalysisResult = {
 };
 
 export default function AnalysePage() {
+    const router = useRouter();
+
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<AnalysisResult | null>(null);
     const [error, setError] = useState("");
+
+    /**
+     * 🔐 Auth Guard
+     * If token is missing → force redirect to /login
+     */
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.replace("/login");
+        }
+    }, [router]);
 
     const handleAnalyze = async () => {
         if (!file) {
@@ -54,6 +68,11 @@ export default function AnalysePage() {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        router.push("/login");
+    };
+
     return (
         <div
             style={{
@@ -82,10 +101,7 @@ export default function AnalysePage() {
                 >
                     <h2 style={{ color: "#fff" }}>Project‑H Analysis</h2>
                     <button
-                        onClick={() => {
-                            localStorage.removeItem("token");
-                            window.location.href = "/login";
-                        }}
+                        onClick={handleLogout}
                         style={{
                             background: "transparent",
                             border: "none",
@@ -129,9 +145,7 @@ export default function AnalysePage() {
                 </button>
 
                 {error && (
-                    <p style={{ color: "#ff6b6b", marginTop: "12px" }}>
-                        {error}
-                    </p>
+                    <p style={{ color: "#ff6b6b", marginTop: "12px" }}>{error}</p>
                 )}
 
                 {/* Results */}
@@ -139,11 +153,21 @@ export default function AnalysePage() {
                     <div style={{ marginTop: "32px", color: "#ddd" }}>
                         <h3 style={{ color: "#fff" }}>Results</h3>
 
-                        <p><b>Panel Count:</b> {result.panel_count}</p>
-                        <p><b>System Size:</b> {result.system_size_kw} kW</p>
-                        <p><b>Monthly Energy:</b> {result.energy?.monthly} kWh</p>
-                        <p><b>Yearly Energy:</b> {result.energy?.yearly} kWh</p>
-                        <p><b>Confidence:</b> {result.confidence}</p>
+                        <p>
+                            <b>Panel Count:</b> {result.panel_count}
+                        </p>
+                        <p>
+                            <b>System Size:</b> {result.system_size_kw} kW
+                        </p>
+                        <p>
+                            <b>Monthly Energy:</b> {result.energy?.monthly} kWh
+                        </p>
+                        <p>
+                            <b>Yearly Energy:</b> {result.energy?.yearly} kWh
+                        </p>
+                        <p>
+                            <b>Confidence:</b> {result.confidence}
+                        </p>
 
                         {result.overlay_image_url && (
                             <div style={{ marginTop: "20px" }}>

@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function Page() {
-  redirect("/analyse");
-  return null;
+export default function Home() {
+  redirect("/login");
 }
