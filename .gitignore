@@ -1,29 +1,62 @@
-# Ignore Python venv anywhere
-.venv/
-*/.venv/
+################################
+# GENERAL
+################################
+*.log
+*.tmp
+.DS_Store
+.env
+.env.*
+!.env.example
 
-venv/
-*/venv/
+################################
+# EDITORS
+################################
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-# Ignore PyCache
+################################
+# NODE / FRONTEND (Next.js)
+################################
+node_modules/
+.next/
+out/
+dist/
+dist-ssr/
+coverage/
+
+################################
+# PYTHON
+################################
 __pycache__/
 *.pyc
-
-# Ignore large binaries
+*.pyo
 *.pyd
-*.dll
+venv/
+.venv/
+*/venv/
+*/.venv/
 
-# Node and build files
-node_modules/
-dist/
-
-
-# AI model files
-*.pth
+################################
+# AI / ML FILES
+################################
 *.pt
+*.pth
 *.onnx
 models/
 ai/models/
 
-.env/
-web/backend/.env
+################################
+# PROJECT-SPECIFIC
+################################
+ai_service/outputs/
+web/backend/uploads/
+
+################################
+# TEMP / CACHE
+################################
+.cache/
+.tmp/
