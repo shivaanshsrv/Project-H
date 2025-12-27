@@ -1,8 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Project-H Documentation</title>
 
 <style>
 body{
@@ -45,7 +40,6 @@ ul{ margin-left:20px; }
     margin-bottom:12px;
 }
 </style>
-</head>
 
 <body>
 
@@ -152,17 +146,44 @@ uvicorn app.main:app --host 0.0.0.0 --port 5001
 </ul>
 </div>
 
+<div style="margin-top:40px;">
 <h2>👨‍💻 Developers</h2>
 
-<div class="dev-card">
-<b>Kushagra</b> — Complete Frontend Development<br>
-Next.js UI, Routing, History, Analyse, Integration, UX Design
+<table style="width:100%;border-collapse:collapse;margin-top:15px;">
+<tr>
+<td style="padding:18px;border-left:6px solid #0e4fff;background:#ffffff;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.06);">
+<b style="font-size:18px;color:#0e4fff;">Kushagra</b><br>
+<span style="color:#333;">Frontend Developer</span>
+<p style="margin-top:8px;line-height:1.6;color:#444;">
+• Complete UI/UX & Next.js workflow<br>
+• Routing, Auth Pages, Navbar, Dashboard<br>
+• Analyse & History Screens Integration<br>
+• Design + User Experience Flow
+</p>
+</td>
+</tr>
+
+<tr><td style="height:12px;"></td></tr>
+
+<tr>
+<td style="padding:18px;border-left:6px solid #18c964;background:#ffffff;border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.06);">
+<b style="font-size:18px;color:#18c964;">Shivansh</b><br>
+<span style="color:#333;">Backend & AI Developer</span>
+<p style="margin-top:8px;line-height:1.6;color:#444;">
+• FastAPI Backend + Database Design<br>
+• Authentication, API, Storage Handling<br>
+• AI Image Processing & Overlay Model<br>
+• Deployment & Architecture Logic
+</p>
+</td>
+</tr>
+</table>
+
+<p style="text-align:center;margin-top:35px;color:#777;">
+🚀 Built with passion — Project‑H © 2025
+</p>
 </div>
 
-<div class="dev-card">
-<b>Shivansh</b> — Complete Backend & AI Service Development<br>
-FastAPI, Authentication, DB, Image Processing, Model Implementation
-</div>
 
 <div class="footer">
 © Project‑H | Solar Optimization through AI — 2025
