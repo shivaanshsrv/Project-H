@@ -34,4 +34,6 @@ async def analyze(
         "status": "success",
         "analysis_id": str(result.inserted_id),
         "analysis": analysis_result
+        
     }
+

@@ -126,6 +126,7 @@ def generate_panel_layout(rooftop_mask, obstruction_mask, angle):
             "angle": angle
         })
 
+
     # 7️⃣ Estimate system size (kW)
     panel_count = len(real_panel_positions)
     system_kw = round(panel_count * 0.35, 2)  # 350W panels
