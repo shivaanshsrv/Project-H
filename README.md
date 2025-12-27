@@ -1,48 +1,4 @@
 
-<style>
-body{
-    font-family: "Segoe UI", Arial, sans-serif;
-    background:#f5f7fa;
-    margin:0; padding:40px;
-    color:#222; max-width:950px;
-    line-height:1.8;
-    margin:auto;
-}
-h1,h2,h3{ color:#0e4fff; margin-top:35px; }
-p{ margin:10px 0; }
-.section{
-    background:#fff;
-    padding:25px;
-    border-radius:12px;
-    box-shadow:0 4px 18px rgba(0,0,0,0.06);
-    margin-bottom:30px;
-}
-pre{
-    background:#1e1e1e; color:#00d463;
-    padding:15px; border-radius:8px;
-    overflow-x:auto; font-size:14px;
-}
-ul{ margin-left:20px; }
-.footer{
-    text-align:center; margin-top:50px;
-    font-size:13px; color:#666;
-}
-.badge{
-    display:inline-block; padding:6px 12px;
-    background:#0e4fff; color:#fff;
-    border-radius:6px; font-size:14px;
-}
-.dev-card{
-    background:#fff;
-    padding:18px;
-    border-left:6px solid #0e4fff;
-    border-radius:6px;
-    margin-bottom:12px;
-}
-</style>
-
-<body>
-
 <h1>⚡ Project‑H — Solar Rooftop Analysis</h1>
 <span class="badge">Version 1.0 Release</span>
 <p>A complete AI-based solar analysis system that processes a rooftop image and predicts solar panel capacity, energy generation, and returns an overlay output visually marking optimal panel regions.</p>
