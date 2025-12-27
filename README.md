@@ -1,108 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Project-H | Solar Roof Analysis</title>
+<meta charset="UTF-8" />
+<title>Project-H Documentation</title>
 
 <style>
-    body{
-        font-family: Arial, sans-serif;
-        background:#f3f3f3;
-        color:#222;
-        line-height:1.6;
-        padding:40px;
-        max-width:900px;
-        margin:auto;
-    }
-    h1,h2,h3{
-        color:#0d6efd;
-        margin-top:30px;
-    }
-    code{
-        background:#eee;
-        padding:3px 6px;
-        border-radius:4px;
-    }
-    pre{
-        background:#111;
-        color:#0f0;
-        padding:15px;
-        border-radius:6px;
-        overflow-x:auto;
-    }
-    .box{
-        background:#fff;
-        padding:20px;
-        border-radius:10px;
-        box-shadow:0 0 10px rgba(0,0,0,0.1);
-        margin-bottom:25px;
-    }
-    .dev-card{
-        background:#fff;
-        padding:15px;
-        border-left:6px solid #0d6efd;
-        border-radius:6px;
-        margin-bottom:10px;
-    }
+body{
+    font-family: "Segoe UI", Arial, sans-serif;
+    background:#f5f7fa;
+    margin:0; padding:40px;
+    color:#222; max-width:950px;
+    line-height:1.8;
+    margin:auto;
+}
+h1,h2,h3{ color:#0e4fff; margin-top:35px; }
+p{ margin:10px 0; }
+.section{
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.06);
+    margin-bottom:30px;
+}
+pre{
+    background:#1e1e1e; color:#00d463;
+    padding:15px; border-radius:8px;
+    overflow-x:auto; font-size:14px;
+}
+ul{ margin-left:20px; }
+.footer{
+    text-align:center; margin-top:50px;
+    font-size:13px; color:#666;
+}
+.badge{
+    display:inline-block; padding:6px 12px;
+    background:#0e4fff; color:#fff;
+    border-radius:6px; font-size:14px;
+}
+.dev-card{
+    background:#fff;
+    padding:18px;
+    border-left:6px solid #0e4fff;
+    border-radius:6px;
+    margin-bottom:12px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🚀 Project-H | Solar Roof Analysis</h1>
-<p><b>Project-H</b> is an AI powered system that estimates rooftop solar feasibility using uploaded roof images. It calculates panel count, system capacity, energy output & provides overlay visualization.</p>
+<h1>⚡ Project‑H — Solar Rooftop Analysis</h1>
+<span class="badge">Version 1.0 Release</span>
+<p>A complete AI-based solar analysis system that processes a rooftop image and predicts solar panel capacity, energy generation, and returns an overlay output visually marking optimal panel regions.</p>
 
-<div class="box">
-<h2>📌 Core Features (Version 1.0)</h2>
+<div class="section">
+<h2>📌 Key Features</h2>
 <ul>
-    <li>User Authentication (Login)</li>
-    <li>Upload Roof Image & Get Analysis</li>
-    <li>Solar Panel Count Estimation</li>
-    <li>System Capacity (kW) Calculation</li>
-    <li>Energy Prediction (Monthly & Annual)</li>
-    <li>Overlay Output Image Display</li>
-    <li>History Storage + Display with Images</li>
-    <li>Profile UI Page (editable fields planned for V2)</li>
+  <li>Login Authentication System</li>
+  <li>Upload Roof Image for Analysis</li>
+  <li>Solar Panel Count & System kW Estimation</li>
+  <li>Monthly + Yearly Energy Generation Prediction</li>
+  <li>Overlay Visualization on Roof Image</li>
+  <li>History Page — stores past processed results</li>
+  <li>Profile Screen UI Included (Editable coming V2)</li>
+  <li>Image Storage: Inputs + Outputs Managed</li>
 </ul>
 </div>
 
-<div class="box">
-<h2>🛠 Tech Stack</h2>
+<div class="section">
+<h2>🧩 Tech Stack</h2>
 <b>Frontend:</b> Next.js, React, TypeScript, Axios<br>
-<b>Backend:</b> FastAPI, Python, Uvicorn, MongoDB<br>
-<b>AI Service:</b> Python (image analysis using ML/CV), OpenCV/YOLO(Optional)<br>
-<b>Database:</b> MongoDB Atlas<br>
+<b>Backend:</b> FastAPI (Python), Auth, DB Models<br>
+<b>AI Service:</b> Image Processing + Overlay Generation<br>
+<b>Database:</b> MongoDB<br><br>
+Modular structure ensures scalability for analytics, reports & improvements in future upgrades.
 </div>
 
-
-<div class="box">
-<h2>📂 Project Folder Structure</h2>
+<div class="section">
+<h2>📂 Project Structure</h2>
 <pre>
 Project-H/
  ├─ web/
- │   ├─ frontend/        → Next.js UI
- │   │   ├─ app/
- │   │   │   ├─ (auth)/login
- │   │   │   ├─ (app)/analyse
- │   │   │   ├─ (app)/dashboard
- │   │   │   ├─ (app)/history
- │   │   │   ├─ (app)/profile
- │   │   │   └─ layout.tsx
+ │   ├─ frontend/              → UI (Next.js)
+ │   │   ├─ app/(auth)/login
+ │   │   ├─ app/(app)/analyse
+ │   │   ├─ app/(app)/dashboard
+ │   │   ├─ app/(app)/history
+ │   │   ├─ app/(app)/profile
  │   │   ├─ components/Navbar.tsx
- │   │   ├─ package.json
  │   │   └─ frontend-requirements.txt
- │   ├─ backend/         → FastAPI
- │   │   ├─ app/
- │   │   │   ├─ main.py
- │   │   ├─ uploads/     → input images saved here
+ │   ├─ backend/               → FastAPI
+ │   │   ├─ app/main.py
+ │   │   ├─ uploads/          → Input Images
  │   │   └─ requirements.txt
- │   ├─ ai_service/
- │   │   ├─ outputs/     → processed overlay images
- │   │   └─ model files
+ │   └─ ai_service/            → Output Overlays
+ │       ├─ outputs/
+ │       └─ processing scripts
 </pre>
 </div>
 
-<div class="box">
-<h2>🚀 Setup Instructions</h2>
+<div class="section">
+<h2>⚙ Installation & Setup</h2>
 
 <h3>Frontend Setup</h3>
 <pre>
@@ -118,69 +116,57 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 </pre>
 
-<h3>AI Service (if separate)</h3>
+<h3>AI Service</h3>
 <pre>
 cd web/ai_service
-python main.py
-</pre>
-
-</div>
-
-<div class="box">
-<h2>🌍 Environment Variables</h2>
-Create `.env.local` inside frontend folder:
-<pre>
-NEXT_PUBLIC_BACKEND_URL=http://127.0.0.1:8000
-NEXT_PUBLIC_AI_URL=http://127.0.0.1:8000
-</pre>
-Make sure backend exposes images:
-<pre>
-/uploads → input images  
-/outputs → overlay results  
+uvicorn app.main:app --host 0.0.0.0 --port 5001
 </pre>
 </div>
 
-<div class="box">
-<h2>🔗 API Endpoints</h2>
-
-<b>Login</b>
-<pre>POST /auth/login</pre>
-
-<b>Analyse Roof</b>
-<pre>POST /ai/analyze  (multipart-form)</pre>
-
-<b>History</b>
-<pre>GET /analysis/my</pre>
+<div class="section">
+<h2>🧪 Usage Flow</h2>
+<ol>
+  <li>User Logs In</li>
+  <li>Uploads Roof Image → AI Processes It</li>
+  <li>Results Display:
+      <ul>
+        <li>Panel Count</li>
+        <li>kW Capacity</li>
+        <li>Monthly/Yearly Energy Output</li>
+        <li>Overlay Visualization</li>
+      </ul>
+  </li>
+  <li>Analysis Saved → Appears in History Page</li>
+  <li>Images accessible from backend mapped folder</li>
+</ol>
 </div>
 
-
-<div class="box">
-<h2>📌 Future V2 Features</h2>
+<div class="section">
+<h2>🚀 Future Enhancements (Planned for V2)</h2>
 <ul>
-    <li>Profile update + photo storage</li>
-    <li>Side-by-side input-output view in history</li>
-    <li>Report PDF Export</li>
-    <li>Dashboard statistics & graphs</li>
-    <li>Improved solar capacity model</li>
+  <li>Side‑By‑Side Input/Output View in History</li>
+  <li>User Profile Editing + Photo Upload</li>
+  <li>Detailed Solar Efficiency Reports + PDF Export</li>
+  <li>Advanced Panel Detection Model Upgrade</li>
+  <li>Dashboard Analytics Charts</li>
 </ul>
 </div>
-
 
 <h2>👨‍💻 Developers</h2>
 
 <div class="dev-card">
-<b>Kush Suchdeo</b> — Frontend Developer<br>
-UI design, Dashboard, History UI, Routing, Integration & Project Structure
+<b>Kushagra</b> — Complete Frontend Development<br>
+Next.js UI, Routing, History, Analyse, Integration, UX Design
 </div>
 
 <div class="dev-card">
-<b>Shivansh</b> — Backend + AI Developer<br>
-API development, Authentication, Database, AI Image Processing, Model Logic
+<b>Shivansh</b> — Complete Backend & AI Service Development<br>
+FastAPI, Authentication, DB, Image Processing, Model Implementation
 </div>
 
-<p style="margin-top:30px;font-size:14px;color:#555;">
-© Project-H | 2025 — Solar Optimization Using Computer Vision
-</p>
+<div class="footer">
+© Project‑H | Solar Optimization through AI — 2025
+</div>
 
 </body>
 </html>
