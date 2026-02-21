@@ -60,3 +60,6 @@ web/backend/uploads/
 ################################
 .cache/
 .tmp/
+
+ai_service/outputs/
+web/backend/uploads/
