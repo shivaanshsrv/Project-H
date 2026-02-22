@@ -8,8 +8,21 @@ import os
 
 from app.model import ai_model
 from app.utils import draw_panels, compute_obstruction_mask
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(title="Project-H AI Service")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --------------------------------------------------
 # DIRECTORIES (ABSOLUTE + SAFE)

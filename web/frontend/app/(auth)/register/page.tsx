@@ -74,7 +74,7 @@ export default function RegisterPage() {
       {/* Place your image inside /public folder as: public/imagesolar.jpg */}
       <div className="hidden lg:flex lg:w-1/2 relative">
         <img
-          src="/images/solar.jpg"
+          src="/images/imagesolar.jpg"
           alt="Solar"
           className="absolute inset-0 w-full h-full object-cover"
         />

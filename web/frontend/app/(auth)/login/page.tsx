@@ -159,7 +159,7 @@ export default function LoginPage() {
       {/* LEFT SIDE IMAGE */}
       <div className="hidden md:block md:w-1/2 relative h-screen">
         <Image
-          src="/images/solar.jpg"
+          src="/images/imagesolar.jpg"
           alt="Solar Rooftop"
           fill
           priority

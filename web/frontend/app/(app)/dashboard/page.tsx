@@ -251,22 +251,18 @@
 //         </div>
 //     )
 // }   
-
-
 "use client"
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
-/* ================= COMPONENTS ================= */
+/* ================= SMALL COMPONENTS ================= */
 
 function Metric({ label, value }: any) {
   return (
     <div>
       <p className="text-sm text-neutral-400">{label}</p>
-      <p className="text-2xl font-semibold mt-1 transition-all duration-500">
-        {value}
-      </p>
+      <p className="text-2xl font-semibold mt-1">{value}</p>
     </div>
   )
 }
@@ -277,14 +273,12 @@ function AnimatedEnergy({ label, value, suffix }: any) {
   return (
     <div>
       <p className="text-sm text-neutral-400">{label}</p>
-
       <div className="mt-3 w-full bg-neutral-800 rounded-full h-2 overflow-hidden">
         <div
           className="bg-yellow-500 h-2 rounded-full transition-all duration-1000 ease-out"
           style={{ width: `${percentage}%` }}
         />
       </div>
-
       <p className="mt-3 text-xl font-semibold">
         {value} {suffix}
       </p>
@@ -303,13 +297,15 @@ function HistoryItem({ title, onClick }: any) {
   )
 }
 
-/* ================= MAIN COMPONENT ================= */
+/* ================= MAIN ================= */
 
 export default function DashboardPage() {
   const [analysis, setAnalysis] = useState<any>(null)
   const [history, setHistory] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  /* ===== LOAD HISTORY (AUTH REQUIRED) ===== */
 
   useEffect(() => {
     loadHistory()
@@ -340,6 +336,8 @@ export default function DashboardPage() {
     }
   }
 
+  /* ===== ANALYZE ROOF ===== */
+
   const handleAnalyze = async () => {
     if (!selectedFile) {
       alert("Upload an image first")
@@ -352,41 +350,51 @@ export default function DashboardPage() {
       const formData = new FormData()
       formData.append("image", selectedFile)
 
-      const res = await fetch("http://127.0.0.1:8001/ai/analyze", {
-        method: "POST",
-        body: formData,
-        credentials: "include",
-      })
+      const res = await fetch(
+        "http://127.0.0.1:8001/analyze-roof",
+        {
+          method: "POST",
+          body: formData,
+        }
+      )
 
-      if (!res.ok) throw new Error("Analyze failed")
+      if (!res.ok) {
+        const errText = await res.text()
+        console.error("AI ERROR:", errText)
+        throw new Error("Analyze failed")
+      }
 
       const data = await res.json()
-      setAnalysis(data.analysis ?? data)
 
+      setAnalysis(data)
       await loadHistory()
+
     } catch (err) {
       console.error(err)
-      alert("Analysis failed. Make sure you're logged in.")
+      alert("Analysis failed.")
     } finally {
       setLoading(false)
     }
   }
 
+  /* ===== LOAD OLD ANALYSIS ===== */
+
   const loadAnalysis = async (id: string) => {
     try {
       const res = await fetch(
-        `http://127.0.0.1:8001/analysis/${id}`,
-        { credentials: "include" }
+        `http://127.0.0.1:8001/analysis/${id}`
       )
 
       if (!res.ok) return
 
       const data = await res.json()
       setAnalysis(data)
-    } catch {
-      console.error("Failed to load analysis")
+    } catch (err) {
+      console.error(err)
     }
   }
+
+  /* ===== GRAPH DATA ===== */
 
   const graphHeights = analysis?.energy?.monthly
     ? [0.6, 0.8, 0.7, 1.0, 0.9].map(multiplier =>
@@ -394,10 +402,12 @@ export default function DashboardPage() {
       )
     : [30, 50, 40, 70, 60]
 
+  /* ================= UI ================= */
+
   return (
     <div className="h-screen w-screen bg-gradient-to-br from-neutral-950 via-neutral-900 to-black text-white overflow-hidden flex">
 
-      {/* LEFT */}
+      {/* LEFT COLUMN */}
       <div className="w-[20%] h-full flex flex-col gap-6 p-6">
 
         <div className="flex-1 bg-neutral-900 rounded-2xl p-6 border border-white/5 shadow-sm">
@@ -432,9 +442,9 @@ export default function DashboardPage() {
       {/* CENTER */}
       <div className="w-[55%] h-full flex flex-col p-6">
 
-        <div className="flex-1 bg-neutral-900 rounded-2xl overflow-hidden flex flex-col border border-white/5 shadow-sm">
+        <div className="flex-1 bg-neutral-900 rounded-2xl flex flex-col border border-white/5 shadow-sm overflow-hidden">
 
-          <div className="flex-1 relative overflow-hidden rounded-2xl flex items-center justify-center">
+          <div className="flex-1 relative flex items-center justify-center overflow-hidden">
 
             {analysis?.overlay_image_url ? (
               <Image
@@ -442,17 +452,19 @@ export default function DashboardPage() {
                 alt="Analyzed Roof"
                 fill
                 className="object-cover rounded-2xl"
+                unoptimized
               />
             ) : (
               <>
                 <Image
-                  src="/imagesolar.jpg"
+                  src="/images/imagesolar.jpg"
                   alt="Roof"
                   fill
                   className="object-cover rounded-2xl opacity-40"
+                  priority
                 />
 
-                <label className="relative z-10 cursor-pointer bg-neutral-800/80 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 hover:bg-neutral-700 transition-all">
+                <label className="relative z-10 cursor-pointer bg-neutral-800/80 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 hover:bg-neutral-700 transition">
                   <span className="text-sm font-medium">
                     Click to Upload Roof Image
                   </span>
@@ -472,18 +484,19 @@ export default function DashboardPage() {
             <button
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full py-4 rounded-2xl bg-yellow-500 text-black font-semibold transition-all duration-300 hover:bg-yellow-400 disabled:opacity-50"
+              className="w-full py-4 rounded-2xl bg-yellow-500 text-black font-semibold hover:bg-yellow-400 transition disabled:opacity-50"
             >
               {loading ? "Analyzing..." : "Analyze the Roof"}
             </button>
           </div>
+
         </div>
       </div>
 
       {/* RIGHT */}
-      <div className="w-[25%] h-full flex flex-col p-6 gap-6">
+      <div className="w-[25%] h-full flex flex-col p-6">
 
-        <div className="flex-1 bg-neutral-900 rounded-2xl p-6 flex flex-col border border-white/5 shadow-sm">
+        <div className="flex-1 bg-neutral-900 rounded-2xl p-6 border border-white/5 shadow-sm flex flex-col">
 
           <h2 className="text-lg font-semibold mb-6">Energy Graph</h2>
 
@@ -499,6 +512,7 @@ export default function DashboardPage() {
 
         </div>
       </div>
+
     </div>
   )
 }
