@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from datetime import datetime
 import uuid
 
@@ -29,17 +29,21 @@ async def register(data: RegisterSchema):
 
 
 @router.post("/login")
-async def login(data: LoginSchema):
+async def login(data: LoginSchema, response: Response):
     user = await users_collection.find_one({"email": data.email})
     if not user or not verify_password(data.password, user["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"user_id": user["_id"]})
 
-    return {
-        "access_token": token,
-        "token_type": "bearer",
-    }
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+    )
+
+    return {"message": "Login successful"}
 
 @router.get("/debug/db")
 async def debug_db():

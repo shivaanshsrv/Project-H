@@ -25,3 +25,7 @@ npm run dev
 # Build (Production)
 npm run build
 npm start
+
+npm install framer-motion
+npm install lucide-react
+npm install recharts

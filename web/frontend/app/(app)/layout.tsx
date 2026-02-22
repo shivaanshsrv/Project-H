@@ -2,17 +2,15 @@
 
 import Navbar from "@/components/Navbar";
 
-export default function AppLayout({
-    children,
+export default function RootLayout({
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode
 }) {
-    return (
-        <>
-            <Navbar />
-            <main style={{ paddingTop: "64px" }}>
-                {children}
-            </main>
-        </>
-    );
+  return (
+    <div className="bg-black min-h-screen">
+      {children}
+    </div>
+  )
 }
+
